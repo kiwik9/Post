@@ -1,10 +1,13 @@
 package com.example.post
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ListAdapter
 import android.widget.Toast
 import com.android.volley.Request
 import com.android.volley.Response
@@ -12,12 +15,14 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.beust.klaxon.JsonReader
 import com.beust.klaxon.Klaxon
-import com.example.post.Adapter.ListAdapter
-import com.example.post.Model.Post
+import com.example.post.Class.Post
+import com.example.post.Entity.PostEntity
 import kotlinx.android.synthetic.main.fragment_post.*
 import java.io.StringReader
 
 class PostFragment : Fragment() {
+
+    var RequestCode = 1
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -29,11 +34,11 @@ class PostFragment : Fragment() {
     }
 
 
+
     private fun setList(list:ArrayList<Post>){
         var adapter : ListAdapter?
-        adapter = ListAdapter(activity, list)
+        adapter = com.example.post.Adapter.ListAdapter(activity, list)
         post_list.adapter = adapter
-
     }
 
     private fun getPost(){
@@ -60,4 +65,6 @@ class PostFragment : Fragment() {
         queue.add(stringRequest)
 
     }
+
+
 }

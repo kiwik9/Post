@@ -1,96 +1,76 @@
 package com.example.post
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.View
+import android.widget.ListAdapter
 import android.widget.Toast
-import androidx.room.Room
-import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
-import com.beust.klaxon.Klaxon
-import com.example.post.Database.AppDB
-import com.example.post.Entity.ComentarioEntity
-import com.example.post.Entity.PostEntity
-import com.example.post.Model.Post
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import com.example.post.Adapter.ListAdapterActivity
+import com.example.post.Class.Comment
+import com.example.post.Class.Post
+import com.example.post.Entity.CommentEntity
+import com.example.post.ViewModel.CommentViewModel
 import kotlinx.android.synthetic.main.activity_detalle.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import kotlinx.android.synthetic.main.fragment_post.*
 
-class DetalleActivity : AppCompatActivity(), View.OnClickListener {
+class DetalleActivity : AppCompatActivity() {
 
-    private var postDetalle : PostEntity? = null
-    private var complete : Boolean? = false
-    private var isSame : Boolean? = false
+    private val commentRequestCode = 1
+    private lateinit var commentViewModel: CommentViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detalle)
-        getData()
 
-        btnguardar.setOnClickListener(this)
+
+
+        fab.setOnClickListener {
+            val intent = Intent(this, ComentarioActivity::class.java)
+            startActivityForResult(intent, commentRequestCode)
+        }
+
+
 
     }
 
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            R.id.btnguardar -> {
-                isSave(postDetalle?.id!!)
+    fun setAllData(){
+
+        var adapter : ListAdapterActivity?
+        var list : ArrayList<Comment>? = null
+
+        commentViewModel = ViewModelProviders.of(this).get(CommentViewModel::class.java)
+
+        commentViewModel.allPost.observe(this, Observer { comments ->
+            comments?.let {
+                for (item in it){
+
+                }
             }
-            R.id.btneliminar -> {
-                isSave(postDetalle?.id!!)
+        })
+        adapter = ListAdapterActivity(this, list!!)
+        post_list.adapter = adapter
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, intentData: Intent?) {
+        super.onActivityResult(requestCode, resultCode, intentData)
+
+        if (requestCode == commentRequestCode && resultCode == Activity.RESULT_OK) {
+            intentData?.let { data ->
+                val commentdata = data.getStringArrayListExtra(ComentarioActivity.EXTRA_REPLY)
+                val comment = CommentEntity(1, 1 , commentdata[0],commentdata[1],commentdata[2])
+                commentViewModel.insert(comment)
             }
+        } else {
+            Toast.makeText(
+                    applicationContext,
+                    "Complete todos los campos",
+                    Toast.LENGTH_LONG
+            ).show()
         }
     }
-
-    fun isSave(id: Int) : PostEntity{
-        var  data : PostEntity? = null
-        if(complete!!){
-
-        val db = AppDB(this)
-        GlobalScope.launch {
-             data = db.PostDao().findById(id)
-
-        }
-        }
-        return data!!
-    }
-
-    fun savepost(){
-        if(complete!! && isSame!!){
-        val db = AppDB(this)
-        GlobalScope.launch {
-                db.PostDao().insertPost(postDetalle!!)
-        }
-        }
-    }
-
-    fun getData(){
-
-        val queue = Volley.newRequestQueue(this)
-        val url = "https://jsonplaceholder.typicode.com/posts/"
-        var id = intent.getIntExtra("id",0)
-        val stringRequest = StringRequest(
-            Request.Method.GET, url+id,
-            Response.Listener<String> { response ->
-
-                var post = Klaxon().parse<Post>(response)
-                text_userid.text = post?.userId.toString()
-                text_id.text = post?.id.toString()
-                text_title.text = post?.title
-                text_body.text = post?.body
-                postDetalle = PostEntity(post?.userId!!,post?.id!!,post?.title!!,post?.body!!)
-                complete = true
-                if(postDetalle?.equals(isSave(post?.id!!))!!)
-                    isSame = true
-
-            },
-            Response.ErrorListener { Toast.makeText(this, "Mal", Toast.LENGTH_SHORT).show()})
-        queue.add(stringRequest)
-    }
-
-
 }
+

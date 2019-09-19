@@ -1,12 +1,11 @@
-package com.example.post.Model
+package com.example.post.Class
 
-
-
-class Post {
-    constructor(userId: Int?, id: Int?, title: String?, body: String?) {
+class Comment {
+    constructor(userId: Int?, id: Int?, title: String?,email: String?, body: String?) {
         this.userId = userId
         this.id = id
         this.title = title
+        this.email = email
         this.body = body
     }
 
@@ -14,5 +13,5 @@ class Post {
     var id: Int? = 0
     var title: String? = null
     var body: String? = null
+    var email: String? = null
 }
-

@@ -1,4 +1,6 @@
 package com.example.post.Adapter
+
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
@@ -7,10 +9,13 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
-import com.example.post.*
+import com.example.post.Class.Comment
 import com.example.post.Class.Post
+import com.example.post.DetalleActivity
+import com.example.post.R
 
-class ListAdapter(private var activity: FragmentActivity?, private var items: ArrayList<Post>) :  BaseAdapter(){
+
+class ListAdapterActivity(private var activity: Activity?, private var items: ArrayList<Comment>) :  BaseAdapter(){
     private class ViewHolder(row: View?) {
         var title: TextView? = null
         var body: TextView? = null
@@ -32,16 +37,9 @@ class ListAdapter(private var activity: FragmentActivity?, private var items: Ar
         }
         view.setOnClickListener { view ->
             activity?.let{
-                if(activity != PostFragment::class){
-                val intent = Intent(activity, PostDetalleActivity::class.java)
+                val intent = Intent(activity, DetalleActivity::class.java)
                 intent.putExtra("user_id",items[position].userId)
                 it.startActivity(intent)
-                }
-                else{
-                    val intent = Intent(activity, DetalleActivity::class.java)
-                    intent.putExtra("user_id",items[position].userId)
-                    it.startActivity(intent)
-                }
             }
         }
         var post = items[position]
@@ -50,7 +48,7 @@ class ListAdapter(private var activity: FragmentActivity?, private var items: Ar
 
         return view
     }
-    override fun getItem(i: Int): Post {
+    override fun getItem(i: Int): Comment {
         return items[i]
     }
     override fun getItemId(i: Int): Long {
@@ -60,4 +58,3 @@ class ListAdapter(private var activity: FragmentActivity?, private var items: Ar
         return items.size
     }
 }
-

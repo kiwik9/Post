@@ -5,7 +5,6 @@ import android.os.Bundle
 import androidx.room.Room
 import androidx.viewpager.widget.ViewPager
 import com.example.post.Adapter.FragmentPagerAdapter
-import com.example.post.Database.AppDB
 import com.google.android.material.tabs.TabLayout
 
 class MainActivity : AppCompatActivity() {
