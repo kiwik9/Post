@@ -14,7 +14,9 @@ import com.beust.klaxon.Klaxon
 import com.example.post.Class.Post
 import com.example.post.Entity.PostEntity
 import com.example.post.ViewModel.PostViewModel
+import kotlinx.android.synthetic.main.activity_comentario.*
 import kotlinx.android.synthetic.main.activity_post_detalle.*
+import java.lang.Exception
 
 class PostDetalleActivity : AppCompatActivity() {
 
@@ -32,9 +34,17 @@ class PostDetalleActivity : AppCompatActivity() {
 
 
         btnguardarPost.setOnClickListener {
-            if(postEntity!= null){
-            postViewModel.insert(postEntity!!)
-            }
+                 val replyIntent = Intent()
+                if(postEntity!= null){
+                    val array = ArrayList<String>()
+                    array.add(postEntity!!.id.toString())
+                    array.add(postEntity!!.userid.toString())
+                    array.add(postEntity!!.title)
+                    array.add(postEntity!!.body)
+                    replyIntent.putExtra(EXTRA_REPLY, array)
+                    setResult(Activity.RESULT_OK, replyIntent)
+                    finish()
+                }
         }
     }
 
@@ -58,6 +68,12 @@ class PostDetalleActivity : AppCompatActivity() {
             Response.ErrorListener { Toast.makeText(this, "Ocurrio algo mal, vuelva a intentarlo", Toast.LENGTH_SHORT).show()})
         queue.add(stringRequest)
     }
+
+    companion object {
+        const val EXTRA_REPLY = "REPLY"
+    }
+
+
 
 
 }

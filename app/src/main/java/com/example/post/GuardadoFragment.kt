@@ -11,10 +11,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.example.post.Class.Post
 import com.example.post.Entity.PostEntity
-import com.example.post.ViewModel.CommentViewModel
 import com.example.post.ViewModel.PostViewModel
 import kotlinx.android.synthetic.main.fragment_guardado2.*
-import kotlinx.android.synthetic.main.fragment_post.*
 
 class GuardadoFragment : Fragment() {
 

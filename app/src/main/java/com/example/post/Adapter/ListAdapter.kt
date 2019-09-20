@@ -4,8 +4,10 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.BaseAdapter
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.FragmentActivity
 import com.example.post.*
 import com.example.post.Class.Post
@@ -31,10 +33,12 @@ class ListAdapter(private var activity: FragmentActivity?, private var items: Ar
             viewHolder = view.tag as ViewHolder
         }
         view.setOnClickListener { view ->
+
+
             activity?.let{
                 if(activity != PostFragment::class){
                 val intent = Intent(activity, PostDetalleActivity::class.java)
-                intent.putExtra("user_id",items[position].userId)
+                intent.putExtra("user_id",items[position].id)
                 it.startActivity(intent)
                 }
                 else{
